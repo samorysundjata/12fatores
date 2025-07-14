@@ -18,7 +18,7 @@ Por isso, a metodologia foi desenvolvida com base em desafios reais enfrentados 
 
 São diretrizes para a construção de aplicações web escaláveis, portáteis e fáceis de manter. Aqui estão:
 
-1. **Base de código (Codebase)**
+1. [**Base de código (Codebase)**](Codebase/README.md)
 
 Descrição: Colocar todo o código em um sistema de controle de versão, como Git ou Mercurial.
 
@@ -66,7 +66,7 @@ Descrição: Utilizar múltiplos processos para alcançar concorrência e escala
 
 Objetivo: Maximizar a capacidade de processamento sem limitações de hardware.
 
-9. **Descarte (Disposability)**
+9. [**Descarte (Disposability)**](Disposability/README.md)
 
 Descrição: Garantir que os processos sejam iniciados e parados rapidamente, minimizando o tempo de inatividade.
 
