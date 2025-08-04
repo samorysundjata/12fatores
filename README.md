@@ -4,25 +4,23 @@ Este repositório tem como objetivo apresentar, explicar e demonstrar os [12 Fat
 
 O The Twelve-Factor App ou 12 Fatores é uma metodologia criada para auxiliar no desenvolvimento de aplicações web modernas, especialmente aquelas voltadas para o modelo de Software como Serviço (SaaS). Ela oferece um conjunto de 12 princípios que visam otimizar o desenvolvimento, a implantação e a escalabilidade dessas aplicações, garantindo portabilidade entre diferentes ambientes de execução. Ao adotar essa metodologia, as equipes de desenvolvimento podem reduzir custos, simplificar a integração de novos membros e facilitar a implantação em plataformas de nuvem, como AWS, Google Cloud e Heroku, por exemplo.
 
-## O que são os 12 Fatores?
-
-O The Twelve-Factor App ou 12 Fatores é uma metodologia criada para auxiliar no desenvolvimento de aplicações web modernas, especialmente aquelas voltadas para o modelo de Software como Serviço (SaaS). Ela oferece um conjunto de 12 princípios que visam otimizar o desenvolvimento, a implantação e a escalabilidade dessas aplicações, garantindo portabilidade entre diferentes ambientes de execução. Ao adotar essa metodologia, as equipes de desenvolvimento podem reduzir custos, simplificar a integração de novos membros garantir portabilidade, resiliência e facilitar a implantação em ambientes na nuvem.
+Sendo assim, a metodologia foi criada para atender às demandas das aplicações web contemporâneas, que exigem alta escalabilidade, agilidade no desenvolvimento e portabilidade entre ambientes. Os 12 fatores foram definidos com base em experiências práticas e nas melhores práticas da indústria, servindo como um guia para a construção de aplicações robustas, fáceis de manter e adequadas para a nuvem. Ao seguir esses princípios, as equipes podem garantir que suas aplicações sejam flexíveis, escaláveis e prontas para o mercado atual.
 
 ## Contexto e Criação
 
 O The Twelve-Factor App surgiu em 2011, em um contexto de crescente popularização da computação em nuvem e da necessidade de aplicações web altamente escaláveis. A metodologia foi formalizada por Adam Wiggins, um dos fundadores da Heroku, uma plataforma de nuvem que permite a implantação e o gerenciamento de aplicações. A ideia era criar um padrão que garantisse que as aplicações fossem facilmente implantadas, escaladas e mantidas na infraestrutura da Heroku, mas que também fosse aplicável a outras plataformas de nuvem.
 
-Por isso, a metodologia foi desenvolvida com base em desafios reais enfrentados por equipes de desenvolvimento, como a dificuldade de manter consistência entre ambientes de desenvolvimento e produção, a complexidade na gestão de configurações e a necessidade de escalabilidade em aplicações modernas. Os 12 fatores foram criados para resolver esses problemas, oferecendo diretrizes claras e práticas para a construção de aplicações que funcionam bem em ambientes de nuvem.
+12 FatoresPor isso, a metodologia foi desenvolvida com base em desafios reais enfrentados por equipes de desenvolvimento, como a dificuldade de manter consistência entre ambientes de desenvolvimento e produção, a complexidade na gestão de configurações e a necessidade de escalabilidade em aplicações modernas. Os 12 fatores foram criados para resolver esses problemas, oferecendo diretrizes claras e práticas para a construção de aplicações que funcionam bem em ambientes de nuvem.
 
-## Então quais são os 12 Fatores?
+## Quais são os 12 Fatores então?
 
-São diretrizes para a construção de aplicações web escaláveis, portáteis e fáceis de manter. Aqui estão:
+Os doze fatores do The Twelve-Factor App são diretrizes para a construção de aplicações web escaláveis, portáteis e fáceis de manter. Aqui estão os doze fatores:
 
 1. [**Base de código (Codebase)**](Codebase/README.md)
 
-Descrição: Colocar todo o código em um sistema de controle de versão, como Git ou Mercurial.
+Este é o alicerce fundamental de uma aplicação. Cada aplicação deve possuir uma única base de código versionada, normalmente armazenada em sistemas de controle de versão como o Git. Essa base é compartilhada entre todos os ambientes — desenvolvimento, homologação, staging e produção — o que garante consistência, rastreabilidade e controle das mudanças aplicadas em cada etapa. A separação entre ambientes não deve significar múltiplas bases de código, mas sim múltiplos deploys da mesma codebase.
 
-Objetivo: Manter o código organizado e rastreável.
+Manter uma única base de código evita divergências e reduz o risco de bugs que surgem de inconsistências entre ambientes. Reutilização de funcionalidades deve ser feita através de bibliotecas ou APIs, não pela duplicação de código. Armazenar o repositório em plataformas como GitHub é uma prática comum e recomendada, pois centraliza a gestão do código, facilita a colaboração entre equipes e torna mais eficiente o controle de versões. Essa abordagem fortalece a disciplina de entrega contínua e alinhamento com boas práticas de engenharia de software.
 
 2. **Dependências (Dependencies)**
 
