@@ -52,41 +52,41 @@ A aplicação deve ser executada como um ou mais processos stateless (sem estado
 
 Essa abordagem permite que múltiplas instâncias da aplicação sejam executadas em paralelo, facilitando a escalabilidade horizontal e a tolerância a falhas. Como os processos não mantêm estado, eles podem ser iniciados, interrompidos ou substituídos a qualquer momento sem afetar a continuidade do serviço, garantindo maior flexibilidade e resiliência.
 
-7. **Vinculação de portas(Port Binding)**
+7. **Vinculação de portas (Port Binding)**
 
-Descrição: Fazer com que a aplicação seja um serviço independente, não dependendo de um servidor de aplicativos.
+A aplicação deve ser autossuficiente e expor seus serviços por meio da vinculação direta a uma porta TCP, tornando-se um servidor que escuta e responde a requisições HTTP, por exemplo. Dessa forma, ela não depende de servidores web externos para funcionar, facilitando o controle e a implantação do serviço.
 
-Objetivo: Facilitar a implantação em diferentes ambientes.
+Essa abordagem torna a aplicação portátil e independente do ambiente em que está executando, permitindo que seja facilmente containerizada, escalada e gerenciada. Além disso, ao expor sua interface por uma porta específica, ela se integra melhor com sistemas de orquestração, balanceamento de carga e infraestrutura em nuvem.
 
 8. **Concorrência (Concurrency)**
 
-Descrição: Utilizar múltiplos processos para alcançar concorrência e escalabilidade horizontal.
+A aplicação deve ser projetada para suportar múltiplos processos concorrentes que possam ser escalados horizontalmente, permitindo distribuir a carga de trabalho entre várias instâncias. Cada processo deve ser capaz de executar uma ou mais funções específicas (como lidar com requisições web, processar tarefas em background ou consumir filas), possibilitando a organização da aplicação em diferentes tipos de trabalhadores.
 
-Objetivo: Maximizar a capacidade de processamento sem limitações de hardware.
+Essa abordagem facilita o dimensionamento dinâmico conforme a demanda, aumentando a capacidade de resposta e a resiliência do sistema. Ao dividir o trabalho em processos independentes e escaláveis, a aplicação pode se adaptar a diferentes volumes de tráfego e manter a estabilidade mesmo sob alta carga.
 
 9. [**Descarte (Disposability)**](Disposability/README.md)
 
-Descrição: Garantir que os processos sejam iniciados e parados rapidamente, minimizando o tempo de inatividade.
+A aplicação deve ser construída para iniciar e parar rapidamente, garantindo agilidade tanto no escalonamento quanto na recuperação de falhas. Processos que desligam rapidamente minimizam o tempo de inatividade e facilitam a manutenção, como implantações contínuas e atualizações sem impacto perceptível para o usuário.
 
-Objetivo: Reduzir erros e melhorar a disponibilidade. [link](Disposability.md)
+Essa capacidade de descarte rápido aumenta a resiliência do sistema, permitindo que instâncias sejam reiniciadas ou substituídas com facilidade em caso de erro, sem comprometer a estabilidade geral da aplicação. Além disso, processos descartáveis facilitam a automação e o gerenciamento eficiente dos recursos em ambientes escaláveis e dinâmicos.
 
 10. **Paridade entre desenvolvimento e produção (Dev/Prod Parity)**
 
-Descrição: Manter o ambiente de desenvolvimento e produção o mais semelhante possível.
+É fundamental manter a paridade entre os ambientes de desenvolvimento, teste e produção, reduzindo ao máximo as diferenças entre eles em termos de software, configuração, banco de dados e dependências. Quanto mais semelhantes forem esses ambientes, menores serão os riscos de bugs e falhas que só aparecem após a implantação.
 
-Objetivo: Reduzir a divergência entre desenvolvimento e produção.
+Manter essa consistência acelera o ciclo de desenvolvimento e entrega, pois problemas detectados durante o desenvolvimento tendem a ser os mesmos que ocorreriam em produção, facilitando a correção antecipada. Além disso, ambientes alinhados promovem maior confiança na qualidade da aplicação e simplificam a automação dos processos de build, teste e deploy.
 
 11. **Registros (Logs)**
 
-Descrição: Tratar logs como fluxos de eventos que devem ser coletados e processados por serviços externos. A palavra “log” vem de uma abreviação de “logbook”, que em inglês naval era o diário de bordo.
+A aplicação deve tratar os registros (logs) como fluxos de eventos que são enviados para um sistema de captura externo, em vez de gravá-los em arquivos locais ou armazenamento interno. Dessa forma, os logs podem ser agregados, monitorados e analisados de maneira centralizada, facilitando a detecção de problemas e o diagnóstico de falhas.
 
-Objetivo: Facilitar o monitoramento e a análise.
+Ao enviar os logs para serviços externos ou pipelines de processamento, a aplicação permanece stateless e mais leve, além de possibilitar a criação de dashboards, alertas e auditorias em tempo real. Essa abordagem também melhora a escalabilidade e a manutenção, pois não depende de recursos locais que podem variar entre instâncias ou ambientes.
 
 12. **Administração de processos (Admin Processes)**
 
-Descrição: Executar tarefas administrativas como processos separados, sem afetar o funcionamento da aplicação.
+Tarefas administrativas, como migrações de banco de dados, scripts de manutenção, backups e outros comandos de gerenciamento, devem ser executadas como processos únicos, isolados da execução principal da aplicação. Esses processos são invocados manualmente ou por meio de scripts automatizados, garantindo que suas operações não interfiram no funcionamento contínuo do sistema.
 
-Objetivo: Manter a estabilidade e a segurança da aplicação durante atualizações ou manutenção.
+Manter esses processos separados facilita a manutenção e o controle, além de permitir maior segurança e previsibilidade nas operações administrativas. Dessa forma, as tarefas de gerenciamento podem ser executadas de forma controlada, sem impactar a disponibilidade ou a performance da aplicação em produção.
 
 > Inspirado em [12factor.net](https://12factor.net/pt_br/)
 
