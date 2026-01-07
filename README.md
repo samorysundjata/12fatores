@@ -92,5 +92,5 @@ Manter esses processos separados facilita a manutenção e o controle, além de 
 
 ## Licença
 
-- Código-fonte: MIT License. Veja o arquivo [LICENSE](./LICENSE) para detalhes.  
-- Documentação e textos explicativos: Creative Commons Attribution 4.0 International (CC BY 4.0). Veja [LICENSE_DOC](./LICENSE_DOC) para detalhes.
+- Código-fonte: Creative Commons Attribution 4.0 International (CC BY 4.0). Veja o arquivo [LICENSE](./LICENSE) para detalhes.
+<!-- - Documentação e textos explicativos: Creative Commons Attribution 4.0 International (CC BY 4.0). Veja [LICENSE_DOC](./LICENSE_DOC) para detalhes. -->
