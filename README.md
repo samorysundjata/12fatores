@@ -1,96 +1,238 @@
-# 12 Fatores: Desenvolvendo Apps Modernos e Escaláveis
+# O Guia Definitivo dos 12 Fatores: Arquitetura Moderna e Escalável na Prática
 
-Este repositório tem como objetivo apresentar, explicar e demonstrar os [12 Fatores](https://12factor.net/pt_br/), uma metodologia para construção de aplicações modernas, escaláveis e de fácil manutenção.
+Construir aplicações que rodam de forma consistente na nuvem, escalam com facilidade e exigem pouca manutenção não é fruto de acaso — é resultado de boas decisões de arquitetura. É exatamente aí que entra a metodologia dos **12 Fatores (The Twelve-Factor App)**.
 
-O The Twelve-Factor App ou 12 Fatores é uma metodologia criada para auxiliar no desenvolvimento de aplicações web modernas, especialmente aquelas voltadas para o modelo de Software como Serviço (SaaS). Ela oferece um conjunto de 12 princípios que visam otimizar o desenvolvimento, a implantação e a escalabilidade dessas aplicações, garantindo portabilidade entre diferentes ambientes de execução. Ao adotar essa metodologia, as equipes de desenvolvimento podem reduzir custos, simplificar a integração de novos membros e facilitar a implantação em plataformas de nuvem, como AWS, Google Cloud e Heroku, por exemplo.
+Formalizada por Adam Wiggins (cofundador da Heroku) em 2011, essa metodologia reúne 12 práticas fundamentais para o desenvolvimento de aplicações SaaS e microsserviços _cloud-native_. Surgida em um contexto de crescente popularização da computação em nuvem, ela nasceu para resolver problemas reais: ambientes que divergem entre desenvolvimento e produção, configurações espalhadas pelo código, e aplicações que só escalam verticalmente.
 
-Sendo assim, a metodologia foi criada para atender às demandas das aplicações web contemporâneas, que exigem alta escalabilidade, agilidade no desenvolvimento e portabilidade entre ambientes. Os 12 fatores foram definidos com base em experiências práticas e nas melhores práticas da indústria, servindo como um guia para a construção de aplicações robustas, fáceis de manter e adequadas para a nuvem. Ao seguir esses princípios, as equipes podem garantir que suas aplicações sejam flexíveis, escaláveis e prontas para o mercado atual.
+Quinze anos depois, o cenário mudou de Heroku para Kubernetes, de dynos para pods, mas os problemas permanecem os mesmos. Abaixo, apresento uma síntese prática de cada um desses princípios e como eles impactam o dia a dia da engenharia de software moderna.
 
-## Contexto e Criação
+---
 
-O The Twelve-Factor App surgiu em 2011, em um contexto de crescente popularização da computação em nuvem e da necessidade de aplicações web altamente escaláveis. A metodologia foi formalizada por Adam Wiggins, um dos fundadores da Heroku, uma plataforma de nuvem que permite a implantação e o gerenciamento de aplicações. A ideia era criar um padrão que garantisse que as aplicações fossem facilmente implantadas, escaladas e mantidas na infraestrutura da Heroku, mas que também fosse aplicável a outras plataformas de nuvem.
+## 1. Base de Código (_Codebase_)
 
-12 FatoresPor isso, a metodologia foi desenvolvida com base em desafios reais enfrentados por equipes de desenvolvimento, como a dificuldade de manter consistência entre ambientes de desenvolvimento e produção, a complexidade na gestão de configurações e a necessidade de escalabilidade em aplicações modernas. Os 12 fatores foram criados para resolver esses problemas, oferecendo diretrizes claras e práticas para a construção de aplicações que funcionam bem em ambientes de nuvem.
+> **Uma única base de código com controle de versão, múltiplos deploys.**
 
-## Quais são os 12 Fatores então?
+Manter o código centralizado em um único repositório Git garante consistência e rastreabilidade. A mesma base de código alimenta todos os ambientes (dev, staging, prod), alterando apenas as configurações aplicadas. Isso significa: uma aplicação = um repositório = muitos ambientes.
 
-Os doze fatores do The Twelve-Factor App são diretrizes para a construção de aplicações web escaláveis, portáteis e fáceis de manter. Aqui estão os doze fatores:
+**Na prática:** Todos os ambientes compartilham o mesmo repositório. O que muda entre desenvolvimento, homologação e produção são as variáveis de ambiente e os serviços conectados, não o código-fonte. Quando você mantém "uma versão para cada ambiente", a divergência se torna um bug silencioso.
 
-1. [**Base de código (Codebase)**](Codebase/README.md)
+**Benefícios:**
 
-Este é o alicerce fundamental de uma aplicação. Cada aplicação deve possuir uma única base de código versionada, normalmente armazenada em sistemas de controle de versão como o Git. Essa base é compartilhada entre todos os ambientes — desenvolvimento, homologação, staging e produção — o que garante consistência, rastreabilidade e controle das mudanças aplicadas em cada etapa. A separação entre ambientes não deve significar múltiplas bases de código, mas sim múltiplos deploys da mesma codebase.
+- Facilita integração contínua (CI/CD)
+- Rollback simples de versões
+- Histórico natural do projeto documentado
+- Onboarding rápido de novos desenvolvedores
 
-Manter uma única base de código evita divergências e reduz o risco de bugs que surgem de inconsistências entre ambientes. Reutilização de funcionalidades deve ser feita através de bibliotecas ou APIs, não pela duplicação de código. Armazenar o repositório em plataformas como GitHub é uma prática comum e recomendada, pois centraliza a gestão do código, facilita a colaboração entre equipes e torna mais eficiente o controle de versões. Essa abordagem fortalece a disciplina de entrega contínua e alinhamento com boas práticas de engenharia de software.
+---
 
-2. **Dependências (Dependencies)**
+## 2. Dependências (_Dependencies_)
 
-Declare explicitamente todas as dependências do projeto, especificando as bibliotecas, pacotes e componentes externos que a aplicação necessita para funcionar corretamente. Essas dependências devem ser isoladas e gerenciadas de forma consistente, utilizando arquivos específicos de manifesto como package.json, requirements.txt, pom.xml ou csproj. Isso garante que o ambiente da aplicação seja previsível e replicável em qualquer máquina ou servidor, evitando surpresas por falta de pacotes ou incompatibilidades de versões.
+> **Declare e isole explicitamente as dependências.**
 
-Manter as dependências declaradas de forma explícita facilita a instalação, manutenção e atualização dos pacotes, contribuindo para a portabilidade e escalabilidade do sistema. Além disso, evita que bibliotecas sejam instaladas globalmente ou de maneira implícita, o que pode gerar conflitos e problemas de versionamento. Ferramentas de gerenciamento de dependências permitem controlar versões usadas entre desenvolvimento, testes e produção, realizar atualizações seguras e garantir maior segurança e estabilidade do software.
+Nunca presuma que uma biblioteca ou ferramenta existe no ambiente de execução. Utilize manifestos explícitos (`csproj`, `package.json`, `requirements.txt`, `pom.xml`) e ferramentas de isolamento para garantir ambientes reprodutíveis.
 
-3. **Configurações (Config)**
+**Na prática:** Todas as dependências devem estar declaradas no manifesto do projeto. Pacotes instalados "na mão" ou bibliotecas globais quebram o contrato no primeiro ambiente limpo. O isolamento reduz conflitos de versão e torna atualizações decisões explícitas e revisáveis.
 
-As configurações da aplicação devem ser armazenadas separadamente do código-fonte, geralmente em variáveis de ambiente ou arquivos externos que não façam parte do repositório de código. Isso inclui informações específicas do ambiente, como credenciais, URLs de serviços, chaves de API e parâmetros que podem variar entre desenvolvimento, teste e produção. Manter essas configurações fora do código permite que a mesma base de código seja utilizada em múltiplos ambientes apenas alterando seus dados de configuração.
+**Evite:**
 
-Essa separação aumenta a segurança, evitando que dados sensíveis sejam expostos no controle de versão, e facilita o gerenciamento e a automação dos ambientes, permitindo que as configurações sejam alteradas sem necessidade de recompilar ou modificar o código. Além disso, favorece a portabilidade da aplicação, pois configurações específicas ficam isoladas, tornando simples a migração entre servidores ou provedores de nuvem.
+- Dependências implícitas ou instaladas globalmente
+- Bibliotecas assumidas como "já existentes" no servidor
+- Versionamento manual sem controle
 
-4. **Serviços de apoio (Backing Services)**
+---
 
-Os serviços de apoio, como bancos de dados, sistemas de cache, filas de mensagens e provedores de armazenamento, devem ser tratados como recursos anexáveis, acessados por meio de URLs ou endpoints configuráveis. Isso significa que esses serviços podem ser facilmente adicionados, substituídos ou removidos sem alterar o código da aplicação, permitindo maior flexibilidade e escalabilidade.
+## 3. Configurações (_Config_)
 
-Tratar esses serviços como recursos externos desacopla a aplicação das infraestruturas específicas, facilitando migrações, testes e atualizações. Além disso, essa abordagem promove ambientes mais resilientes e portáveis, onde a conexão com serviços de apoio pode ser configurada dinamicamente conforme o ambiente, garantindo que a aplicação funcione de forma consistente independentemente do local onde está executando.
+> **Armazene as configurações no ambiente.**
 
-5. **Gerar, subir, executar (Build, Release, Run)**
+Tudo o que muda entre ambientes (credenciais de banco, chaves de API, URLs de serviços) deve ser injetado via variáveis de ambiente, garantindo segurança e evitando vazamento de dados sensíveis no repositório.
 
-O processo de gerar, subir e executar a aplicação deve ser rigorosamente separado em três etapas distintas: build, release e run. Na etapa de build, o código-fonte é transformado em um pacote executável e todas as dependências são resolvidas e incorporadas. Na fase de release, esse pacote é combinado com as configurações específicas do ambiente para formar uma versão pronta para ser executada. Por fim, na etapa de run, essa versão é executada em um ambiente de produção ou outro ambiente designado.
+**Na prática:** A mesma compilação sobe em desenvolvimento e produção. Trocar de região, banco ou provedor passa a ser uma mudança de configuração, sem recompilar. Segredos nunca entram no histórico do Git — quem já rotacionou uma chave commitada sabe o custo disso.
 
-Essa separação garante controle e previsibilidade em cada fase do ciclo de vida da aplicação, facilitando a automação e a rastreabilidade das versões. Além disso, ao manter as configurações separadas do build, permite que a mesma compilação seja promovida entre diferentes ambientes apenas alterando os dados de configuração, aumentando a portabilidade e reduzindo riscos de inconsistências durante a implantação.
+**Principais vantagens:**
 
-6. **Processos (Processes)**
+- Segurança: credenciais não vazam no controle de versão
+- Portabilidade: migração facilitada entre provedores
+- Automação: configuração via pipeline sem tocar no código
 
-A aplicação deve ser executada como um ou mais processos stateless (sem estado), o que significa que nenhuma informação do estado do usuário ou da aplicação deve ser armazenada localmente na memória ou no sistema de arquivos entre as requisições. Qualquer dado persistente precisa ser armazenado em serviços externos, como bancos de dados ou caches compartilhados.
+---
 
-Essa abordagem permite que múltiplas instâncias da aplicação sejam executadas em paralelo, facilitando a escalabilidade horizontal e a tolerância a falhas. Como os processos não mantêm estado, eles podem ser iniciados, interrompidos ou substituídos a qualquer momento sem afetar a continuidade do serviço, garantindo maior flexibilidade e resiliência.
+## 4. Serviços de Apoio (_Backing Services_)
 
-7. **Vinculação de portas (Port Binding)**
+> **Trate serviços de apoio como recursos anexáveis.**
 
-A aplicação deve ser autossuficiente e expor seus serviços por meio da vinculação direta a uma porta TCP, tornando-se um servidor que escuta e responde a requisições HTTP, por exemplo. Dessa forma, ela não depende de servidores web externos para funcionar, facilitando o controle e a implantação do serviço.
+Bancos de dados, filas de mensagens (RabbitMQ, Kafka), caches (Redis) e provedores de armazenamento devem ser consumidos via URLs e credenciais configuráveis. A aplicação não precisa saber se o Postgres está num container local ou num serviço gerenciado — é só um endpoint.
 
-Essa abordagem torna a aplicação portátil e independente do ambiente em que está executando, permitindo que seja facilmente containerizada, escalada e gerenciada. Além disso, ao expor sua interface por uma porta específica, ela se integra melhor com sistemas de orquestração, balanceamento de carga e infraestrutura em nuvem.
+**Na prática:** Trocar o recurso é trocar a configuração. O código de acesso permanece o mesmo. Esse desacoplamento permite testar com serviços descartáveis, promover para produção e migrar de fornecedor sem reescrever regras de negócio.
 
-8. **Concorrência (Concurrency)**
+**Resultado:**
 
-A aplicação deve ser projetada para suportar múltiplos processos concorrentes que possam ser escalados horizontalmente, permitindo distribuir a carga de trabalho entre várias instâncias. Cada processo deve ser capaz de executar uma ou mais funções específicas (como lidar com requisições web, processar tarefas em background ou consumir filas), possibilitando a organização da aplicação em diferentes tipos de trabalhadores.
+- Resiliência e portabilidade
+- Testes com serviços temporários
+- Troca de fornecedor sem impacto no código
 
-Essa abordagem facilita o dimensionamento dinâmico conforme a demanda, aumentando a capacidade de resposta e a resiliência do sistema. Ao dividir o trabalho em processos independentes e escaláveis, a aplicação pode se adaptar a diferentes volumes de tráfego e manter a estabilidade mesmo sob alta carga.
+---
 
-9. [**Descarte (Disposability)**](Disposability/README.md)
+## 5. Gerar, Subir, Executar (_Build, Release, Run_)
 
-A aplicação deve ser construída para iniciar e parar rapidamente, garantindo agilidade tanto no escalonamento quanto na recuperação de falhas. Processos que desligam rapidamente minimizam o tempo de inatividade e facilitam a manutenção, como implantações contínuas e atualizações sem impacto perceptível para o usuário.
+> **Separe rigorosamente os estágios de construção e execução.**
 
-Essa capacidade de descarte rápido aumenta a resiliência do sistema, permitindo que instâncias sejam reiniciadas ou substituídas com facilidade em caso de erro, sem comprometer a estabilidade geral da aplicação. Além disso, processos descartáveis facilitam a automação e o gerenciamento eficiente dos recursos em ambientes escaláveis e dinâmicos.
+O caminho até a produção tem três etapas distintas:
 
-10. **Paridade entre desenvolvimento e produção (Dev/Prod Parity)**
+- **Build:** Transforma código-fonte e dependências em um artefato executável
+- **Release:** Une o artefato compilado com as configurações do ambiente, gerando uma versão identificada
+- **Run:** Executa essa versão no ambiente de destino
 
-É fundamental manter a paridade entre os ambientes de desenvolvimento, teste e produção, reduzindo ao máximo as diferenças entre eles em termos de software, configuração, banco de dados e dependências. Quanto mais semelhantes forem esses ambientes, menores serão os riscos de bugs e falhas que só aparecem após a implantação.
+**Na prática:** Quando as três etapas se misturam — compilar no servidor, ler segredo durante build, ajustar arquivo em execução — ninguém sabe com precisão o que está no ar. Separá-las devolve rastreabilidade: o mesmo build percorre os ambientes, só a configuração muda.
 
-Manter essa consistência acelera o ciclo de desenvolvimento e entrega, pois problemas detectados durante o desenvolvimento tendem a ser os mesmos que ocorreriam em produção, facilitando a correção antecipada. Além disso, ambientes alinhados promovem maior confiança na qualidade da aplicação e simplificam a automação dos processos de build, teste e deploy.
+**Ganhos:**
 
-11. **Registros (Logs)**
+- Automação natural de pipeline
+- Rastreabilidade completa de versões
+- Promove o mesmo artefato entre ambientes
 
-A aplicação deve tratar os registros (logs) como fluxos de eventos que são enviados para um sistema de captura externo, em vez de gravá-los em arquivos locais ou armazenamento interno. Dessa forma, os logs podem ser agregados, monitorados e analisados de maneira centralizada, facilitando a detecção de problemas e o diagnóstico de falhas.
+---
 
-Ao enviar os logs para serviços externos ou pipelines de processamento, a aplicação permanece stateless e mais leve, além de possibilitar a criação de dashboards, alertas e auditorias em tempo real. Essa abordagem também melhora a escalabilidade e a manutenção, pois não depende de recursos locais que podem variar entre instâncias ou ambientes.
+## 6. Processos (_Processes_)
 
-12. **Administração de processos (Admin Processes)**
+> **Execute a aplicação como um ou mais processos _stateless_.**
 
-Tarefas administrativas, como migrações de banco de dados, scripts de manutenção, backups e outros comandos de gerenciamento, devem ser executadas como processos únicos, isolados da execução principal da aplicação. Esses processos são invocados manualmente ou por meio de scripts automatizados, garantindo que suas operações não interfiram no funcionamento contínuo do sistema.
+Processos não devem manter estado na memória local ou no disco. Sessão de usuário, carrinho e qualquer dado que precise sobreviver à próxima requisição moram num serviço externo: banco ou cache compartilhado.
 
-Manter esses processos separados facilita a manutenção e o controle, além de permitir maior segurança e previsibilidade nas operações administrativas. Dessa forma, as tarefas de gerenciamento podem ser executadas de forma controlada, sem impactar a disponibilidade ou a performance da aplicação em produção.
+**Na prática:** Memória do processo e disco local são efêmeros. A instância pode cair, ser substituída ou multiplicada, e o usuário continua de onde estava. Esse desenho é o que torna a escala horizontal viável — duas instâncias atrás de um balanceador só funcionam quando qualquer uma atende qualquer requisição.
 
-> Inspirado em [12factor.net](https://12factor.net/pt_br/)
+**Vantagens:**
 
-## Licença
+- Escalabilidade horizontal real
+- Tolerância a falhas
+- Flexibilidade operacional
 
-- Código-fonte: Creative Commons Attribution 4.0 International (CC BY 4.0). Veja o arquivo [LICENSE](./LICENSE) para detalhes.
-<!-- - Documentação e textos explicativos: Creative Commons Attribution 4.0 International (CC BY 4.0). Veja [LICENSE_DOC](./LICENSE_DOC) para detalhes. -->
+---
+
+## 7. Vinculação de Portas (_Port Binding_)
+
+> **Exporte serviços via vinculação direta de portas.**
+
+A aplicação deve ser autossuficiente e expor seus serviços diretamente ouvindo em uma porta TCP (ex: HTTP), dispensando a necessidade de servidores web externos injetados manualmente.
+
+**Na prática:** A aplicação sobe sozinha e escuta numa porta. Ela não espera um servidor web externo injetar o runtime. O processo _é_ o servidor. Isso simplifica container, orquestração e balanceamento — a plataforma só precisa saber em qual porta aceitar conexões.
+
+**Benefícios:**
+
+- Autossuficiência operacional
+- Portabilidade entre ambientes
+- Integração natural com orquestradores
+
+---
+
+## 8. Concorrência (_Concurrency_)
+
+> **Escale através do modelo de processos.**
+
+Aumente a capacidade do sistema multiplicando o número de instâncias/processos (escalabilidade horizontal) e dividindo o trabalho por tipos de tarefas: um tipo atende HTTP, outro consome fila, outro executa trabalho agendado.
+
+**Na prática:** Quando a demanda de API cresce, sobem mais processos web. Quando a fila acumula, sobem mais consumidores. O dimensionamento segue o gargalo real, em vez de inflar um processo único que faz tudo.
+
+**Resultado:**
+
+- Escala conforme a demanda específica
+- Melhor uso de recursos
+- Arquitetura preparada para picos
+
+---
+
+## 9. Descarte (_Disposability_)
+
+> **Maximize a robustez com inicialização rápida e _graceful shutdown_.**
+
+Aplicações devem iniciar rapidamente para responder a picos de tráfego e desligar de forma graciosa, encerrando conexões e tarefas sem corromper dados ao receber um sinal de parada (`SIGTERM`).
+
+**Na prática:** Subida rápida encurta deploy e reação a pico. Encerramento gracioso para de aceitar trabalho novo, conclui o que estava em andamento e libera recursos. Tarefa longa vai para fila, com estado guardado fora. Essa combinação torna rollout contínuo rotineiro.
+
+**Vantagens:**
+
+- Deploys ágeis e seguros
+- Resiliência a falhas
+- Substituição automática de instâncias
+
+---
+
+## 10. Paridade entre Dev e Prod (_Dev/Prod Parity_)
+
+> **Mantenha desenvolvimento, staging e produção o mais semelhantes possível.**
+
+Reduza a distância entre os ambientes em três frentes: tempo (deploys rápidos), equipe (devs acompanhando produção) e ferramentas (utilizar os mesmos serviços de apoio em dev e prod).
+
+**Na prática:** Quanto menor a distância de tempo, pessoas e ferramentas entre os ambientes, menor a classe de bugs que "só existem em produção". Banco com a mesma engine, mesmas versões de runtime, mesmos tipos de serviço. Dados e escala diferem; a forma do sistema, não.
+
+**Benefícios:**
+
+- Menos bugs "surpresa" em produção
+- Ciclo de feedback mais rápido
+- Maior confiança na qualidade
+
+---
+
+## 11. Registros (_Logs_)
+
+> **Trate logs como fluxos de eventos.**
+
+A aplicação escreve logs na saída padrão (`stdout`). A captura, agregação e análise dos logs devem ser delegadas para ferramentas externas de infraestrutura (ex: Serilog, Datadog, ELK stack).
+
+**Na prática:** A aplicação não abre arquivo, não rotaciona disco e não decide onde o histórico vai morar. Ela emite eventos. Com várias instâncias, arquivo local é um beco sem saída — cada processo tem um pedaço da história que some quando é descartado.
+
+**Ganhos:**
+
+- Centralização automática de logs
+- Processos mais leves e sem estado
+- Observabilidade em tempo real
+
+---
+
+## 12. Administração de Processos (_Admin Processes_)
+
+> **Execute tarefas administrativas como processos pontuais.**
+
+Migrações de banco de dados e scripts de manutenção devem ser executados como tarefas isoladas, utilizando o mesmo ambiente, código e configurações da aplicação principal.
+
+**Na prática:** Esses comandos usam a base de código da aplicação, então falam com os mesmos modelos e bibliotecas. Sobem, executam uma vez e terminam. O processo que atende HTTP continua disponível enquanto a tarefa administrativa trabalha, com rastreio e permissão próprios.
+
+**Vantagens:**
+
+- Operações consistentes e rastreáveis
+- Segurança e controle
+- Separação clara de responsabilidades
+
+---
+
+## Como os 12 Fatores se Conectam
+
+Imagine uma alteração pequena: um endpoint novo.
+
+Ela entra num único repositório (1). O pipeline resolve as dependências declaradas (2) e produz um artefato. O release combina esse artefato com as variáveis do ambiente de homologação (3), onde o banco e a fila são serviços anexados por URL (4). O processo sobe (5), escuta uma porta (7), não guarda sessão em memória (6) e escreve log na saída padrão (11). Um comando de migração roda à parte, uma vez, antes do tráfego (12).
+
+Quando o mesmo artefato segue para produção, muda a configuração, não o build. Se a demanda cresce, a plataforma multiplica os processos (8). Se um deles cai (9), outro assume, porque nenhum deles era insubstituível. O ambiente de desenvolvimento se parece com produção (10), então o bug detectado localmente é o mesmo que ocorreria lá.
+
+Esse encadeamento é o método. Isolado, cada fator parece uma boa prática de checklist. Juntos, eles descrevem uma aplicação que a plataforma consegue operar: promover, escalar, substituir e observar.
+
+---
+
+## Por Onde Começar
+
+A ordem da lista já é um caminho:
+
+1. **Uma base de código** por aplicação, com histórico de verdade
+2. **Dependências explícitas**, instaláveis num ambiente limpo
+3. **Configuração fora do repositório**, com segredo fora do Git
+4. **Banco, fila e cache** tratados como recursos trocáveis
+5. **Pipeline que separe** build, release e execução
+
+Os fatores de processo, porta, concorrência, descarte, paridade, log e administração ficam mais simples depois que esses cinco estão no lugar. Escalar um processo que guarda estado, ou agregar log de uma aplicação que escreve em arquivo local, exige desfazer decisões anteriores.
+
+A metodologia não escolhe linguagem nem nuvem. Ela pede que a aplicação seja um **artefato previsível, configurável por fora e descartável por dentro**. Quem entrega software em 2026 continua esbarrando nas mesmas três perguntas de 2011: o que está rodando, com qual configuração, e o que acontece quando esse processo deixa de existir.
+
+Os 12 fatores são uma forma disciplinada de responder às três.
+
+---
+
+_Baseado na metodologia [The Twelve-Factor App](https://12factor.net/pt_br/), de Adam Wiggins. Conteúdo sob licença [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)._
